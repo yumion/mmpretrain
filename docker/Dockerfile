@@ -1,6 +1,8 @@
 ARG PYTORCH="1.12.1"
 ARG CUDA="11.3"
 ARG CUDNN="8"
+ARG MMENGINE="0.8.4"
+ARG MMCV="2.0.1"
 
 FROM pytorch/pytorch:${PYTORCH}-cuda${CUDA}-cudnn${CUDNN}-devel
 
@@ -11,6 +13,8 @@ RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machi
 ENV TORCH_CUDA_ARCH_LIST="6.0 6.1 7.0+PTX"
 ENV TORCH_NVCC_FLAGS="-Xfatbin -compress-all"
 ENV CMAKE_PREFIX_PATH="(dirname(which conda))/../"
+ENV FORCE_CUDA="1"
+ENV CUDA_DEVICE_ORDER="PCI_BUS_ID"
 
 RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6 \
     && apt-get clean \
@@ -18,9 +22,15 @@ RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build 
 
 # Install MIM
 RUN pip install openmim
+# Install MMCV
+ARG MMENGINE
+ARG MMCV
+RUN ["/bin/bash", "-c", "mim install mmengine==${MMENGINE}"]
+RUN ["/bin/bash", "-c", "mim install mmcv==${MMCV}"]
 
 # Install MMPretrain
 RUN conda clean --all
-RUN git clone https://github.com/open-mmlab/mmpretrain.git
-WORKDIR ./mmpretrain
-RUN mim install --no-cache-dir -e .
+RUN mkdir /.cache && chmod -R 777 /.cache
+# RUN git clone https://github.com/open-mmlab/mmpretrain.git
+# WORKDIR ./mmpretrain
+# RUN mim install --no-cache-dir -e .
