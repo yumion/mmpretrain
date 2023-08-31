@@ -4,10 +4,12 @@ _base_ = [
 randomness = dict(seed=3407, deterministic=False)
 load_from = None
 
-data_root = "/data2/shared/miccai/EndoVis2023/SurgToolLoc/classification/v1.0"
+data_root = "/data2/shared/miccai/EndoVis2023/SurgToolLoc/classification/v1.1"
 crop_size = 384
 lr = 5e-4
 max_epochs = 100
+num_gpus = 2
+batch_size = 16
 
 
 # dataset settings
@@ -78,7 +80,7 @@ test_pipeline = [
 ]
 
 train_dataloader = dict(
-    batch_size=32,
+    batch_size=batch_size,
     num_workers=16,
     dataset=dict(
         type=dataset_type,
@@ -93,7 +95,7 @@ train_dataloader = dict(
 )
 
 val_dataloader = dict(
-    batch_size=32,
+    batch_size=batch_size,
     num_workers=16,
     dataset=dict(
         type=dataset_type,
@@ -135,12 +137,12 @@ param_scheduler = [
         type="LinearLR",
         start_factor=lr,
         by_epoch=True,
-        end=2,
+        end=max_epochs // 5,
         # update by iter
         convert_to_iter_based=True,
     ),
     # main learning rate scheduler
-    dict(type="CosineAnnealingLR", eta_min=1e-5, by_epoch=True, begin=2),
+    dict(type="CosineAnnealingLR", eta_min=1e-5, by_epoch=True, begin=max_epochs // 5),
 ]
 
 # train, val, test setting
@@ -150,7 +152,7 @@ test_cfg = dict()
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # based on the actual training batch size.
-auto_scale_lr = dict(base_batch_size=64)
+auto_scale_lr = dict(base_batch_size=batch_size * num_gpus)
 
 
 # runtime setting
@@ -164,7 +166,7 @@ default_hooks = dict(
     # validation results visualization, set True to enable it.
     visualization=dict(enable=True, interval=1000),
 )
-custom_hooks = [dict(type="EMAHook", momentum=1e-4, priority="ABOVE_NORMAL")]
+# custom_hooks = [dict(type="EMAHook", momentum=1e-4, priority="ABOVE_NORMAL")]
 
 
 # Model settings
@@ -172,7 +174,6 @@ model = dict(
     data_preprocessor=data_preprocessor,
     type="TimmClassifier",
     model_name="maxvit_rmlp_base_rw_384.sw_in12k_ft_in1k",
-    features_only=True,
     pretrained=True,
     num_classes=len(classes),
     loss=dict(
@@ -188,8 +189,7 @@ model = dict(
     # ),
     # neck=dict(type="GlobalAveragePooling"),
     # head=dict(
-    #     # in_channels=(96, 192, 384, 768),
-    #     in_channels=768,
+    #     in_channels=768,  # (96, 192, 384, 768)
     #     num_classes=len(classes),
     #     loss=dict(
     #         type="LabelSmoothLoss",

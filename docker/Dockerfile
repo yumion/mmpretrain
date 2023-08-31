@@ -31,6 +31,7 @@ RUN ["/bin/bash", "-c", "mim install mmcv==${MMCV}"]
 # Install MMPretrain
 RUN conda clean --all
 RUN mkdir /.cache && chmod -R 777 /.cache
-# RUN git clone https://github.com/open-mmlab/mmpretrain.git
-# WORKDIR ./mmpretrain
-# RUN mim install --no-cache-dir -e .
+RUN git clone -b main https://github.com/yumion/mmpretrain.git
+WORKDIR ./mmpretrain
+RUN pip install -r requirements/optional.txt
+RUN mim install --no-cache-dir -e .
