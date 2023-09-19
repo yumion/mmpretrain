@@ -4,7 +4,7 @@ _base_ = [
 randomness = dict(seed=3407, deterministic=False)
 load_from = None
 
-data_root = "/data2/shared/miccai/EndoVis2023/SurgToolLoc/classification/v1.1"
+data_root = "/data2/shared/miccai/EndoVis2023/SurgToolLoc/classification/v0.2"
 crop_size = 384
 lr = 5e-4
 max_epochs = 100

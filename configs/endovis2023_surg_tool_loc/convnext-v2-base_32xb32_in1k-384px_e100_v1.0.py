@@ -5,9 +5,12 @@ _base_ = [
 randomness = dict(seed=3407, deterministic=False)
 load_from = "https://download.openmmlab.com/mmclassification/v0/convnext-v2/convnext-v2-base_fcmae-in21k-pre_3rdparty_in1k_20230104-c48d16a5.pth"  # noqa
 
-data_root = "/data2/shared/miccai/EndoVis2023/SurgToolLoc/classification/v0.1"
+data_root = "/data2/shared/miccai/EndoVis2023/SurgToolLoc/classification/v1.0"
 crop_size = 384
 lr = 5e-4
+max_epochs = 100
+batch_size = 32
+num_gpus = 4
 
 
 # dataset settings
@@ -49,13 +52,13 @@ train_pipeline = [
                 min_width=crop_size,
                 border_mode=0,
                 value=0,
-            )
+            ),
+            dict(type="RandomRotate90", p=0.5),
+            dict(type="RandomResizedCrop", height=crop_size, width=crop_size, interpolation=4),
+            dict(type="HorizontalFlip", p=0.5),
+            dict(type="VerticalFlip", p=0.5),
         ],
     ),
-    dict(type="Rotate", prob=0.5, angle=90),
-    dict(type="RandomResizedCrop", scale=crop_size, backend="pillow", interpolation="bicubic"),
-    dict(type="RandomFlip", prob=0.5, direction="horizontal"),
-    dict(type="RandomFlip", prob=0.5, direction="vertical"),
     dict(type="PackInputs"),
 ]
 
@@ -70,15 +73,15 @@ test_pipeline = [
                 min_width=crop_size,
                 border_mode=0,
                 value=0,
-            )
+            ),
+            dict(type="Resize", height=crop_size, width=crop_size, interpolation=4),
         ],
     ),
-    dict(type="Resize", scale=crop_size),
     dict(type="PackInputs"),
 ]
 
 train_dataloader = dict(
-    batch_size=32,
+    batch_size=batch_size,
     num_workers=16,
     dataset=dict(
         type=dataset_type,
@@ -93,7 +96,7 @@ train_dataloader = dict(
 )
 
 val_dataloader = dict(
-    batch_size=32,
+    batch_size=batch_size,
     num_workers=16,
     dataset=dict(
         type=dataset_type,
@@ -144,13 +147,13 @@ param_scheduler = [
 ]
 
 # train, val, test setting
-train_cfg = dict(by_epoch=True, max_epochs=50, val_interval=1)
+train_cfg = dict(by_epoch=True, max_epochs=max_epochs, val_interval=1)
 val_cfg = dict()
 test_cfg = dict()
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # based on the actual training batch size.
-auto_scale_lr = dict(base_batch_size=64)
+auto_scale_lr = dict(base_batch_size=batch_size * num_gpus)
 
 
 # runtime setting
@@ -175,23 +178,6 @@ model = dict(
         loss=dict(
             type="LabelSmoothLoss",
             label_smooth_val=0.1,
-            class_weight=[
-                4381.411764705882,
-                5.647433467283342,
-                4.2797058147552285,
-                129.3125,
-                43.660023446658855,
-                17.009362868234756,
-                6.263897065007148,
-                3.825774307874056,
-                86.00923787528869,
-                24.622809917355372,
-                572.9538461538461,
-                4381.411764705882,
-                411.51381215469615,
-                72.66731707317074,
-                1,
-            ],
         ),
     ),
 )

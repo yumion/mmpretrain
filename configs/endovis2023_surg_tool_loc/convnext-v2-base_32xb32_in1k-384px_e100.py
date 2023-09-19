@@ -5,7 +5,7 @@ _base_ = [
 randomness = dict(seed=3407, deterministic=False)
 load_from = "https://download.openmmlab.com/mmclassification/v0/convnext-v2/convnext-v2-base_fcmae-in21k-pre_3rdparty_in1k_20230104-c48d16a5.pth"  # noqa
 
-data_root = "/data2/shared/miccai/EndoVis2023/SurgToolLoc/classification/v1.0"
+data_root = "/data2/shared/miccai/EndoVis2023/SurgToolLoc/classification/v0.1"
 crop_size = 384
 lr = 5e-4
 max_epochs = 100
