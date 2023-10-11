@@ -3,3 +3,4 @@ grad-cam >= 1.3.7   # For CAM visualization
 requests            # For torchserve
 scikit-learn        # For t-SNE visualization and unit tests.
 timm
+wandb

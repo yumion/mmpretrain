@@ -6,6 +6,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="")
     parser.add_argument("dataset", type=Path)
     parser.add_argument("labels", type=Path)
+    parser.add_argument("--suffix", type=str, default=".png")
     return parser.parse_args()
 
 
@@ -23,7 +24,7 @@ def main():
                 # data_root/clip_000000/class1
                 label = label_dir.name
                 label_index = labels.index(label)
-                for input_path in label_dir.glob("*.png"):
+                for input_path in label_dir.glob(f"*{args.suffix}"):
                     # data_root/clip_000000/class1/frame_000000.png
                     input_file = str(input_path).replace(f"{data_prefix}/", "")
                     fw.write(f"{input_file} {label_index}\n")

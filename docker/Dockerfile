@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build 
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# for excecuting as a user
+RUN mkdir -p /.cache /.local /tmp && chmod -R 777 /.cache /.local /tmp
+
 # Install MIM
 RUN pip install openmim
 # Install MMCV
@@ -30,7 +33,6 @@ RUN ["/bin/bash", "-c", "mim install mmcv==${MMCV}"]
 
 # Install MMPretrain
 RUN conda clean --all
-RUN mkdir /.cache && chmod -R 777 /.cache
 RUN git clone -b main https://github.com/yumion/mmpretrain.git
 WORKDIR ./mmpretrain
 RUN pip install -r requirements/optional.txt

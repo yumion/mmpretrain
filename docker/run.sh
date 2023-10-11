@@ -1,11 +1,10 @@
 CONTAINER_NAME=$1
 
-cd /data2/src/atsushi/mmpretrain
+cd /mnt/cloudy_3/SigMA/engineering/atsushi/mmpretrain
 docker rm -f $CONTAINER_NAME && \
 docker run \
     --gpus all \
     --shm-size=64gb \
-    --restart unless-stopped\
     -v /data1:/data1 \
     -v /data2:/data2 \
     -itd \
