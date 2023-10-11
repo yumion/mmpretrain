@@ -5,8 +5,7 @@ docker rm -f $CONTAINER_NAME && \
 docker run \
     --gpus all \
     --shm-size=64gb \
-    -v /data1:/data1 \
-    -v /data2:/data2 \
+    -v /mnt:/mnt \
     -itd \
     --name $CONTAINER_NAME \
     mmpretrain:pytorch1.12.1-cuda11.3-cudnn8-mmcv2.0.1-mmengine0.8.4
