@@ -75,6 +75,7 @@ class VisualizationHook(Hook):
         for sample_id in range(first_sample_id, end_idx, self.interval):
             image = images[sample_id - start_idx]
             image = image.permute(1, 2, 0).cpu().numpy().astype('uint8')
+            image = image[..., ::-1]  # RGB to BGR
 
             data_sample = data_samples[sample_id - start_idx]
             if 'img_path' in data_sample:
