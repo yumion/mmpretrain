@@ -1,7 +1,7 @@
 ARG PYTORCH="1.12.1"
 ARG CUDA="11.3"
 ARG CUDNN="8"
-ARG MMENGINE="0.8.4"
+ARG MMENGINE="0.9.0"
 ARG MMCV="2.0.1"
 
 FROM pytorch/pytorch:${PYTORCH}-cuda${CUDA}-cudnn${CUDNN}-devel
@@ -16,7 +16,7 @@ ENV CMAKE_PREFIX_PATH="(dirname(which conda))/../"
 ENV FORCE_CUDA="1"
 ENV CUDA_DEVICE_ORDER="PCI_BUS_ID"
 
-RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6 \
+RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git wget curl ninja-build libglib2.0-0 libsm6 libxrender-dev libxext6 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
