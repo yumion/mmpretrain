@@ -81,9 +81,13 @@ def main():
         metrics = evaluator.offline_evaluate(predictions, None)
         cm = metrics['confusion_matrix/result']
         try:
+            if cfg.test_dataloader.dataset.type == "ConcatDataset":
+                dataset = cfg.test_dataloader.dataset.datasets[0]
+            else:
+                dataset = cfg.test_dataloader.dataset
             # Try to build the dataset.
             dataset = DATASETS.build({
-                **cfg.test_dataloader.dataset, 'pipeline': []
+                **dataset, 'pipeline': []
             })
             classes = dataset.metainfo.get('classes')
         except Exception:

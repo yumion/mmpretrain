@@ -21,7 +21,8 @@ RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git wget curl ni
     && rm -rf /var/lib/apt/lists/*
 
 # for excecuting as a user
-RUN mkdir -p /.cache /.local /tmp && chmod -R 777 /.cache /.local /tmp
+RUN mkdir -p /.cache /.local /tmp \
+    && chmod -R 777 /.cache /.local /tmp
 
 # Install MIM
 RUN pip install openmim
