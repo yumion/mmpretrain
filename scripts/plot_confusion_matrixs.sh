@@ -1,4 +1,4 @@
-work_dir=work_dirs/maxvit_2xb32_in1k-384px_e100/20231025_071533
+work_dir=work_dirs/maxvit_2xb32_in1k-384px_e100_new/20231115_082634
 config=$work_dir/vis_data/config.py
 pred_result=$work_dir/vis_data/pred.pkl
 

@@ -280,6 +280,7 @@ class CustomDataset(BaseDataset):
                 img_path = backend.join_path(self.img_prefix, sample)
                 info = {'img_path': img_path}
             data_list.append(info)
+        MMLogger.get_current_instance().info(f"Loaded {len(data_list)} images")
         return data_list
 
     def is_valid_file(self, filename: str) -> bool:

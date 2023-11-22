@@ -1,11 +1,10 @@
-work_dir=work_dirs/maxvit_2xb32_in1k-384px_e100/20231025_071533
+work_dir=work_dirs/maxvit_2xb32_in1k-384px_e100_new/20231115_082634
 config=$work_dir/vis_data/config.py
-checkpoint=work_dirs/maxvit_2xb32_in1k-384px_e100/epoch_100.pth
+checkpoint=work_dirs/maxvit_2xb32_in1k-384px_e100_new/20231115_082634/best_single-label_f1-score_epoch_94.pth
 
-tools/dist_test.sh \
+python tools/test.py \
     $config \
     $checkpoint \
-    1 \
     --work-dir $work_dir \
     --out $work_dir/vis_data/pred.pkl \
     --out-item pred \
