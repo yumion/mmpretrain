@@ -153,6 +153,13 @@ def merge_args(cfg, args):
     if args.cfg_options is not None:
         cfg.merge_from_dict(args.cfg_options)
 
+    # remove WandbVisBackend from vis_backends
+    if 'vis_backends' in cfg:
+        cfg.visualizer.vis_backends = [
+            backend for backend in cfg.vis_backends
+            if not backend.type == 'WandbVisBackend'
+        ]
+
     return cfg
 
 

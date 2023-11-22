@@ -285,7 +285,7 @@ class CustomDataset(BaseDataset):
                 info = {"img_path": img_path}
             data_list.append(info)
         MMLogger.get_current_instance().info(
-            f"Loaded {len(data_list)} images from {self.img_prefix}"
+            f"Loaded {len(data_list)} images from {self.ann_file or self.img_prefix}"
         )
         return data_list
 
