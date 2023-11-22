@@ -9,4 +9,4 @@ python tools/test.py \
     --out $work_dir/vis_data/pred.pkl \
     --out-item pred \
     --show-dir $work_dir/vis_data/pred \
-    --cfg-options "test_evaluator.average=None"
+    --cfg-options "test_evaluator.average=None" "test_evaluator.items=[precision,recall,f1-score,support]"
