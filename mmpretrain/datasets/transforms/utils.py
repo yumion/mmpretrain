@@ -1,5 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import copy
+import ctypes
+import random
+import string
 from typing import List, Union
 
 from mmcv.transforms import BaseTransform
@@ -19,11 +22,11 @@ def get_transform_idx(pipeline: PIPELINE_TYPE, target: str) -> int:
     """
     for i, transform in enumerate(pipeline):
         if isinstance(transform, dict):
-            if isinstance(transform['type'], type):
-                if transform['type'].__name__ == target:
+            if isinstance(transform["type"], type):
+                if transform["type"].__name__ == target:
                     return i
             else:
-                if transform['type'] == target:
+                if transform["type"] == target:
                     return i
         else:
             if transform.__class__.__name__ == target:
@@ -51,3 +54,24 @@ def remove_transform(pipeline: PIPELINE_TYPE, target: str, inplace=False):
         idx = get_transform_idx(pipeline, target)
 
     return pipeline
+
+
+def get_random_string(length: int = 15) -> str:
+    """Get random string with letters and digits.
+
+    Args:
+        length (int): Length of random string. Defaults to 15.
+    """
+    return "".join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
+
+
+def get_thread_id() -> int:
+    """Get current thread id."""
+    # use ctype to find thread id
+    thread_id = ctypes.CDLL("libc.so.6").syscall(186)
+    return thread_id
+
+
+def get_shm_dir() -> str:
+    """Get shm dir for temporary usage."""
+    return "/dev/shm"
