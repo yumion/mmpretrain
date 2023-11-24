@@ -3,7 +3,7 @@ USER_ID=$(id -u)
 GROUP_ID=$(id -g)
 USER_NAME=$(whoami)
 
-cd /mnt/cloudy_3/SigMA/engineering/atsushi/mmpretrain
+cd /mnt/SigMA/engineering/atsushi/mmpretrain
 docker rm -f $CONTAINER_NAME && \
 docker run \
     --gpus all \
