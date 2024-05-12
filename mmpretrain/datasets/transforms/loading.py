@@ -58,9 +58,10 @@ class LoadImageFromVideo(BaseTransform):
             with open(new_path, "wb") as f:
                 f.write(self.file_client.get(results["video_path"]))
 
-        frame_id = results["frame_id"]
+        container = mmcv.VideoReader(new_path)
+        frame_id = min(results["frame_id"], len(container))
         try:
-            img = mmcv.VideoReader(new_path)[frame_id]
+            img = container[frame_id]
         except Exception as e:
             if self.ignore_empty:
                 return
